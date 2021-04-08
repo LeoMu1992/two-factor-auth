@@ -1,0 +1,197 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jod</groupId>
+	<artifactId>two-factor-auth</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>${project.artifactId}</name>
+	<url>${urlPostecomSite}/${project.groupId}/${project.artifactId}</url>
+	<description>two-factor-auth</description>
+
+	<properties>
+		<site.downloadadabledist>${urlPostecomRepoRelease}/org/jod/${project.artifactId}/${project.version}/${project.artifactId}-${project.version}-web-app-dist.zip</site.downloadadabledist>
+		<site.downloadadableolddist>${urlPostecomRepoRelease}/org/jod/${project.artifactId}/</site.downloadadableolddist>
+		<project.scm.id>git-scm-server</project.scm.id>
+		<git.url>http://gitlab.rete.poste/DAS/spike/${project.artifactId}</git.url>
+
+	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>dist-release</id>
+			<name>Poste Italiane Distribution Releases</name>
+			<url>${urlPostecomDistRelease}</url>
+		</repository>
+		<snapshotRepository>
+			<id>dist-snap</id>
+			<name>Poste Italiane Distribution Snapshots</name>
+			<url>${urlPostecomDistSnap}</url>
+		</snapshotRepository>
+		<site>
+			<id>dist-site</id>
+			<name>Poste Italiane Distribution Site</name>
+			<url>${urlPostecomDistSite}/${project.groupId}/${project.artifactId}</url>
+		</site>
+	</distributionManagement>
+
+	<scm>
+		<connection>scm:git:${git.url}.git</connection>
+		<developerConnection>scm:git:${git.url}.git</developerConnection>
+		<url>${git.url}</url>
+		<tag>HEAD</tag>
+	</scm>
+
+
+	<dependencies>
+
+		<!-- begin test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.4</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.15</version>
+			<scope>compile</scope>
+		</dependency>
+
+
+		<!-- Servlet -->
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Oracle -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>19.7.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- MongoDB -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.10.2</version>
+		</dependency>
+
+
+		<!-- end test -->
+	</dependencies>
+
+	<organization>
+		<name>Poste Italiane S.p.A.</name>
+		<url>http://www.poste.it</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>claudio.quaresima</id>
+			<name>Quaresima Claudio</name>
+			<email>claudio.quaresima@posteitaliane.it</email>
+		</developer>
+		<developer>
+			<id>flavio.pietrelli</id>
+			<name>Flavio Pietrelli</name>
+			<email>flavio.pietrelli@posteitaliane.it</email>
+		</developer>
+	</developers>
+
+	<build>
+
+		<!-- Questo server per leggere le variabili del pom applicativamente -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<!-- <includes> -->
+				<!-- <include>*.*</include> -->
+				<!-- </includes> -->
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>ISO-8859-1</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<descriptors>
+						<descriptor>assembly-web-app-dist.xml</descriptor>
+					</descriptors>
+					<finalName>${project.artifactId}-${project.version}</finalName>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<path>/two-factor-auth</path>
+					<port>8080</port>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>

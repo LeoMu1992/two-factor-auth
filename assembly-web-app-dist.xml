@@ -1,0 +1,41 @@
+<assembly>
+
+	<!-- This assembly produces a distributable zip ready to install, configure, and run -->
+
+	<id>web-app-dist</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<!-- <outputDirectory>applicationdist</outputDirectory> -->
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<fileSets>
+
+		<!-- the project configuration files -->
+		<fileSet>
+			<directory>applconf/</directory>
+			<outputDirectory>applconf/</outputDirectory>
+			<!-- <excludes> <exclude>test.properties</exclude> </excludes> -->
+		</fileSet>
+
+		<!-- eventuali script sql -->
+		<fileSet>
+			<directory>src/main/sql</directory>
+			<outputDirectory>sql</outputDirectory>
+		</fileSet>
+
+		<fileSet>
+			<directory>target</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>${project.artifactId}-${project.version}.${project.packaging}</include>
+				<!--
+				<include>${project.artifactId}-${project.version}-web-app-no-sm-api.${project.packaging}</include>
+				<include>${project.artifactId}-${project.version}-web-app-no-ojdbc.${project.packaging}</include>
+				<include>${project.artifactId}-${project.version}-web-app-no-sm-api-no-ojdbc.${project.packaging}</include>
+				-->
+			</includes>
+		</fileSet>
+	</fileSets>
+
+</assembly>
